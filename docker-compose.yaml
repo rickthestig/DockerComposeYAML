@@ -1,1 +1,51 @@
-
+---
+version: "2.1"
+services:
+  swag:
+    image: lscr.io/linuxserver/swag:latest
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - URL=phpwizard.cc
+      - VALIDATION=dns
+      - SUBDOMAINS=wildcard #optional
+      - CERTPROVIDER= #optional, defaults to 
+      - DNSPLUGIN=cloudflare #optional
+      - PROPAGATION= #optional
+      - EMAIL= #optional, DO THIS
+      - ONLY_SUBDOMAINS=false #optional
+      - EXTRA_DOMAINS= #optional, if you use this, set exact subdomains and validation to http
+      - STAGING=false #optional
+    volumes:
+      - /path/to/appdata/config:/config
+    ports:
+      - 443:443
+      - 80:80 #optional
+    restart: unless-stopped
+  cloudflareDDNS:
+    image: oznu/cloudflare-ddns
+    container_name: cloudflareDDNS
+    environment:
+      - EMAIL=example.com
+      - API_KEY=a1B2C3 #Cloudflare DNS key, allows to set A records to your IP
+      - ZONE=phpwizard.cc #domain
+      - SUBDOMAIN= #optional
+      - PROXIED=false #true|false
+      - RRTYPE=A #A|AAAA
+  db:
+    image: mysql
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080 #may need to change - better version of PHP My Admin
