@@ -6,19 +6,19 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      - PUID: 1000
-      - PGID: 1000
-      - TZ: 'Etc/UTC'
-      - URL: 'phpwizard.cc'
-      - VALIDATION: 'dns'
-      - SUBDOMAINS: 'wildcard' #optional
-      - CERTPROVIDER: '' #optional, defaults to 
-      - DNSPLUGIN: 'cloudflare' #optional
-      - PROPAGATION: '' #optional
-      - EMAIL: '' #optional, DO THIS
-      - ONLY_SUBDOMAINS: 'false' #optional
-      - EXTRA_DOMAINS: '' #optional, if you use this, set exact subdomains and validation to http
-      - STAGING: 'false' #optional
+      PUID: 1000
+      PGID: 1000
+      TZ: 'Etc/UTC'
+      URL: 'phpwizard.cc'
+      VALIDATION: 'dns'
+      SUBDOMAINS: 'wildcard' #optional
+      CERTPROVIDER: '' #optional, defaults to 
+      DNSPLUGIN: 'cloudflare' #optional
+      PROPAGATION: '' #optional
+      EMAIL: '' #optional, DO THIS
+      ONLY_SUBDOMAINS: 'false' #optional
+      EXTRA_DOMAINS: '' #optional, if you use this, set exact subdomains and validation to http
+      STAGING: 'false' #optional
     volumes:
       - /path/to/appdata/config:/config
     ports:
@@ -29,12 +29,12 @@ services:
     image: oznu/cloudflare-ddns
     container_name: cloudflareDDNS
     environment:
-      - EMAIL: 'example.com'
-      - API_KEY: 'a1B2C3' #Cloudflare DNS key, allows to set A records to your IP
-      - ZONE: 'phpwizard.cc' #domain
-      - SUBDOMAIN: '' #optional
-      - PROXIED: 'false' #true|false
-      - RRTYPE: 'A' #A|AAAA
+      EMAIL: 'example.com'
+      API_KEY: 'a1B2C3' #Cloudflare DNS key, allows to set A records to your IP
+      ZONE: 'phpwizard.cc' #domain
+      SUBDOMAIN: '' #optional
+      PROXIED: 'false' #true|false
+      RRTYPE: 'A' #A|AAAA
   db:
     image: mysql:8.2
     command: '--default-authentication-plugin=mysql_native_password'
