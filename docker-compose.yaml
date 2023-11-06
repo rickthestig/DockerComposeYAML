@@ -1,4 +1,3 @@
----
 version: "2.1"
 services:
   swag:
@@ -7,19 +6,19 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - URL=phpwizard.cc
-      - VALIDATION=dns
-      - SUBDOMAINS=wildcard #optional
-      - CERTPROVIDER= #optional, defaults to 
-      - DNSPLUGIN=cloudflare #optional
-      - PROPAGATION= #optional
-      - EMAIL= #optional, DO THIS
-      - ONLY_SUBDOMAINS=false #optional
-      - EXTRA_DOMAINS= #optional, if you use this, set exact subdomains and validation to http
-      - STAGING=false #optional
+      PUID: 1000
+      PGID: 1000
+      TZ: 'Etc/UTC'
+      URL: 'phpwizard.cc'
+      VALIDATION: 'dns'
+      SUBDOMAINS: 'wildcard' #optional
+      CERTPROVIDER: '' #optional, defaults to 
+      DNSPLUGIN: 'cloudflare' #optional
+      PROPAGATION: '' #optional
+      EMAIL: '' #optional, DO THIS
+      ONLY_SUBDOMAINS: 'false' #optional
+      EXTRA_DOMAINS: '' #optional, if you use this, set exact subdomains and validation to http
+      STAGING: 'false' #optional
     volumes:
       - /path/to/appdata/config:/config
     ports:
@@ -30,22 +29,28 @@ services:
     image: oznu/cloudflare-ddns
     container_name: cloudflareDDNS
     environment:
-      - EMAIL=example.com
-      - API_KEY=a1B2C3 #Cloudflare DNS key, allows to set A records to your IP
-      - ZONE=phpwizard.cc #domain
-      - SUBDOMAIN= #optional
-      - PROXIED=false #true|false
-      - RRTYPE=A #A|AAAA
+      EMAIL: 'example.com'
+      API_KEY: 'a1B2C3' #Cloudflare DNS key, allows to set A records to your IP
+      ZONE: 'phpwizard.cc' #domain
+      SUBDOMAIN: '' #optional
+      PROXIED: 'false' #true|false
+      RRTYPE: 'A' #A|AAAA
   db:
-    image: mysql
-    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-    # (this is just an example, not intended to be a production configuration)
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    image: mysql:8.2
+    command: '--default-authentication-plugin=mysql_native_password'
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      - MYSQL_ROOT_PASSWORD=somewordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    expose:
+      - 3306 # Note, you cannot access this port from outside docker's internal network
+      - 33060
+    volumes:
+      - /path/to/appdata/config:/var/lib/mysql #make the data persistent
   adminer:
     image: adminer
-    restart: always
+    restart: unless-stopped
     ports:
-      - 8080:8080 #may need to change - better version of PHP My Admin
+      - '8085:8080' #Access at [IP]:8085
