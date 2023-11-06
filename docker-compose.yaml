@@ -48,7 +48,7 @@ services:
       - 3306 # Note, you cannot access this port from outside docker's internal network
       - 33060
     volumes:
-      - /path/to/appdata/config:/var/lib/mysql #make the data persistant
+      - /path/to/appdata/config:/var/lib/mysql #make the data persistent
   adminer:
     image: adminer
     restart: unless-stopped
